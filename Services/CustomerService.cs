@@ -16,9 +16,23 @@ namespace CustomerAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            bool isDeleted = false;
+
+            using (var db = new CustomerEntities())
+            {
+                var customer = db.Customers.SingleOrDefault(c => c.Id == id);
+
+                if (customer != null)
+                {
+                    db.Entry(customer).State = EntityState.Deleted;
+                    await db.SaveChangesAsync();
+                    isDeleted = true;
+                }
+            }
+
+            return isDeleted;
         }
 
         public async Task<List<Customer>> ListAllAsync()
@@ -36,9 +50,10 @@ namespace CustomerAPI.Services
         public async Task<bool> UpdateAsync(Customer customer)
         {
             bool isUpdated = false;
+
             using (var db = new CustomerEntities())
             {
-                var result = db.Customers.SingleOrDefault(c=>c.Id == customer.Id);
+                var result = db.Customers.SingleOrDefault(c => c.Id == customer.Id);
 
                 if (result != null)
                 {
@@ -47,6 +62,7 @@ namespace CustomerAPI.Services
                     result.PhoneNumber = customer.PhoneNumber;
                     result.Email = customer.Email;
                     await db.SaveChangesAsync();
+                    isUpdated = true;
                 }
             }
 

@@ -19,6 +19,7 @@ namespace CustomerAPI.Controllers
             customerService = new CustomerService();
         }
 
+        //Method Fetch All the customers 
         public async Task<IHttpActionResult> GetCustomers()
         {
             try
@@ -34,20 +35,23 @@ namespace CustomerAPI.Controllers
             }
         }
 
+        //Method Create or Update customer
         public async Task<IHttpActionResult> PostCreateCustomer([FromBody]Models.Customer customer)
         {
             try
             {
-                var _success = await customerService.CreateAsync(customer);
+                var record = await customerService.CreateOrUpdateAsync(customer);
 
-                string _message = "Unable to create customer details";
+                string _message = "Unable to create or customer details";
+                var _success = false;
 
-                if (_success)
+                if (record != null)
                 {
-                    _message= "Customer created successfully";
+                    _message = "Customer details updated successfully";
+                    _success = true;
                 }
 
-                var result = new { success = _success, message = _message };
+                var result = new { success = _success, message = _message, customer = record };
                 return Json(result);
             }
             catch (Exception e)
@@ -57,30 +61,8 @@ namespace CustomerAPI.Controllers
             }
         }
 
-        public async Task<IHttpActionResult> PutUpdateCustomer(Models.Customer customer)
-        {
-            try
-            {
-                var _success = await customerService.UpdateAsync(customer);
-
-                string _message = "Unable to update customer details";
-
-                if (_success)
-                {
-                    _message = "Updated customer details successfully";
-                }
-
-                var result = new { success = _success, message = _message };
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                var result = new { success = false, message = e.Message };
-                return Json(result);
-            }
-        }
-
-        public async Task<IHttpActionResult> DeleteCustomer(int id)
+        //Method to delete customer
+        public async Task<IHttpActionResult> GetDeleteCustomer(int id)
         {
             try
             {

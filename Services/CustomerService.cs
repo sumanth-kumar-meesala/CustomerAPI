@@ -11,25 +11,40 @@ namespace CustomerAPI.Services
     public class CustomerService : ICustomerService
     {
 
-        public async Task<bool> CreateAsync(Customer customer)
+        public async Task<Customer> CreateOrUpdateAsync(Customer customer)
         {
-            bool isAdded = false;
+            Customer record = null;
 
             using (var db = new CustomerEntities())
             {
-                var record = db.Customers.Create();
-                record.FirstName = customer.FirstName;
-                record.LastName = customer.LastName;
-                record.Email = customer.Email;
-                record.PhoneNumber = customer.PhoneNumber;
+                if (customer.Id != 0)
+                {
+                    record = db.Customers.SingleOrDefault(c => c.Id == customer.Id);
 
-                db.Customers.Add(record);
-                await db.SaveChangesAsync();
+                    if (record != null)
+                    {
+                        record.FirstName = customer.FirstName;
+                        record.LastName = customer.LastName;
+                        record.PhoneNumber = customer.PhoneNumber;
+                        record.Email = customer.Email;
+                        await db.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    record = db.Customers.Create();
+                    record.FirstName = customer.FirstName;
+                    record.LastName = customer.LastName;
+                    record.Email = customer.Email;
+                    record.PhoneNumber = customer.PhoneNumber;
 
-                isAdded = true;
+                    db.Customers.Add(record);
+                    await db.SaveChangesAsync();
+                }
+
+
+                return record;
             }
-
-            return isAdded;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -61,28 +76,6 @@ namespace CustomerAPI.Services
             }
 
             return customers;
-        }
-
-        public async Task<bool> UpdateAsync(Customer customer)
-        {
-            bool isUpdated = false;
-
-            using (var db = new CustomerEntities())
-            {
-                var result = db.Customers.SingleOrDefault(c => c.Id == customer.Id);
-
-                if (result != null)
-                {
-                    result.FirstName = customer.FirstName;
-                    result.LastName = customer.LastName;
-                    result.PhoneNumber = customer.PhoneNumber;
-                    result.Email = customer.Email;
-                    await db.SaveChangesAsync();
-                    isUpdated = true;
-                }
-            }
-
-            return isUpdated;
         }
     }
 }

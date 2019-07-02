@@ -9,8 +9,7 @@ namespace CustomerAPI.Services
     public interface ICustomerService
     {
         Task<List<Models.Customer>> ListAllAsync();
-        Task<bool> UpdateAsync(Models.Customer customer);
         Task<bool> DeleteAsync(int id);
-        Task<bool> CreateAsync(Models.Customer customer);
+        Task<Models.Customer> CreateOrUpdateAsync(Models.Customer customer);
     }
 }

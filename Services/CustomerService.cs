@@ -11,9 +11,20 @@ namespace CustomerAPI.Services
     public class CustomerService : ICustomerService
     {
 
-        public Task<int> CreateAsync(Customer customer)
+        public async Task<bool> CreateAsync(Customer customer)
         {
-            throw new NotImplementedException();
+            bool isAdded = false;
+
+            using (var db = new CustomerEntities())
+            {
+                var customers = db.Set<Customer>();
+                customers.Add(customer);
+
+                await db.SaveChangesAsync();
+                isAdded = true;
+            }
+
+            return isAdded;
         }
 
         public async Task<bool> DeleteAsync(int id)

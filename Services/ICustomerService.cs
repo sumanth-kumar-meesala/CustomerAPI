@@ -11,6 +11,6 @@ namespace CustomerAPI.Services
         Task<List<Models.Customer>> ListAllAsync();
         Task<bool> UpdateAsync(Models.Customer customer);
         Task<bool> DeleteAsync(int id);
-        Task<int> CreateAsync(Models.Customer customer);
+        Task<bool> CreateAsync(Models.Customer customer);
     }
 }

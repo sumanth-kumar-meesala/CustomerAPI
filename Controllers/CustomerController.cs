@@ -67,7 +67,7 @@ namespace CustomerAPI.Controllers
 
                 if (_success)
                 {
-                    _message = "Updated customer detailssuccessfully";
+                    _message = "Updated customer details successfully";
                 }
 
                 var result = new { success = _success, message = _message };
@@ -80,9 +80,27 @@ namespace CustomerAPI.Controllers
             }
         }
 
-        // DELETE api/values/5
-        public void Delete(int id)
+        public async Task<IHttpActionResult> DeleteCustomer(int id)
         {
+            try
+            {
+                var _success = await customerService.DeleteAsync(id);
+
+                string _message = "Unable to delete customer";
+
+                if (_success)
+                {
+                    _message = "Deleted customer successfully";
+                }
+
+                var result = new { success = _success, message = _message };
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                var result = new { success = false, message = e.Message };
+                return Json(result);
+            }
         }
     }
 }

@@ -17,10 +17,15 @@ namespace CustomerAPI.Services
 
             using (var db = new CustomerEntities())
             {
-                var customers = db.Set<Customer>();
-                customers.Add(customer);
+                var record = db.Customers.Create();
+                record.FirstName = customer.FirstName;
+                record.LastName = customer.LastName;
+                record.Email = customer.Email;
+                record.PhoneNumber = customer.PhoneNumber;
 
+                db.Customers.Add(record);
                 await db.SaveChangesAsync();
+
                 isAdded = true;
             }
 

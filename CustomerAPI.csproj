@@ -200,8 +200,8 @@
     <Content Include="Global.asax" />
     <Content Include="Models\CustomerModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CustomerModel.Context.cs</LastGenOutput>
       <DependentUpon>CustomerModel.edmx</DependentUpon>
+      <LastGenOutput>CustomerModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\CustomerModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

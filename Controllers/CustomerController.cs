@@ -34,15 +34,27 @@ namespace CustomerAPI.Controllers
             }
         }
 
-        // GET api/values/5
-        public string Get(int id)
+        public async Task<IHttpActionResult> PostUpdateCustomer([FromBody]Models.Customer customer)
         {
-            return "value";
-        }
+            try
+            {
+                var _success = await customerService.UpdateAsync(customer);
 
-        // POST api/values
-        public void Post([FromBody]string value)
-        {
+                string _message = "Unable to update customer details";
+
+                if (_success)
+                {
+                    _message= "Updated customer details";
+                }
+
+                var result = new { success = _success, message = _message };
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                var result = new { success = false, message = e.Message };
+                return Json(result);
+            }
         }
 
         // PUT api/values/5

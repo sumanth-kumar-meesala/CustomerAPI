@@ -33,9 +33,24 @@ namespace CustomerAPI.Services
             return customers;
         }
 
-        public Task<bool> UpdateAsync(Customer customer)
+        public async Task<bool> UpdateAsync(Customer customer)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+            using (var db = new CustomerEntities())
+            {
+                var result = db.Customers.SingleOrDefault(c=>c.Id == customer.Id);
+
+                if (result != null)
+                {
+                    result.FirstName = customer.FirstName;
+                    result.LastName = customer.LastName;
+                    result.PhoneNumber = customer.PhoneNumber;
+                    result.Email = customer.Email;
+                    await db.SaveChangesAsync();
+                }
+            }
+
+            return isUpdated;
         }
     }
 }
